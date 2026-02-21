@@ -192,7 +192,7 @@ All date formatting and metric computation are handled in the backend to maintai
 ## Author
 
 Tapan Khandelwal
-Business Analytics and Software Development Enthusiast
+
 
 ---
 
