@@ -1,0 +1,597 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Business Health Intelligence{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --success-gradient: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+        --warning-gradient: linear-gradient(135deg, #fad0c4 0%, #ffd1ff 100%);
+        --danger-gradient: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+    }
+    
+    .dashboard-header {
+        background: var(--primary-gradient);
+        color: white;
+        padding: 3rem 0;
+        margin-bottom: 2rem;
+        border-radius: 0 0 50px 50px;
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    }
+    
+    .health-score-card {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        transition: transform 0.3s;
+    }
+    
+    .health-score-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .health-score {
+        font-size: 5rem;
+        font-weight: 800;
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        line-height: 1;
+    }
+    
+    .health-label {
+        font-size: 1.1rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: #6c757d;
+        margin-bottom: 0.5rem;
+    }
+    
+    .status-badge {
+        padding: 0.75rem 2rem;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        display: inline-block;
+    }
+    
+    .status-excellent {
+        background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+        color: #1e7e34;
+    }
+    
+    .status-good {
+        background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        color: #0b5e7e;
+    }
+    
+    .status-fair {
+        background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        color: #b45b0f;
+    }
+    
+    .status-poor {
+        background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+        color: #b02a37;
+    }
+    
+    .metric-card {
+        background: white;
+        border-radius: 20px;
+        padding: 1.5rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        transition: all 0.3s;
+        border: 1px solid rgba(0,0,0,0.02);
+    }
+    
+    .metric-card:hover {
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    }
+    
+    .metric-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+    }
+    
+    .metric-icon i {
+        font-size: 1.5rem;
+        color: white;
+    }
+    
+    .metric-value {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 0;
+    }
+    
+    .metric-label {
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #6c757d;
+    }
+    
+    .progress-circle {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: white;
+    }
+    
+    .risk-card {
+        background: white;
+        border-radius: 15px;
+        padding: 1.2rem;
+        margin-bottom: 1rem;
+        border-left: 4px solid;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        transition: transform 0.2s;
+    }
+    
+    .risk-card:hover {
+        transform: translateX(5px);
+    }
+    
+    .risk-high {
+        border-left-color: #dc3545;
+        background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%);
+    }
+    
+    .risk-medium {
+        border-left-color: #ffc107;
+        background: linear-gradient(135deg, #fff9e6 0%, #ffffff 100%);
+    }
+    
+    .risk-low {
+        border-left-color: #28a745;
+        background: linear-gradient(135deg, #f0fff4 0%, #ffffff 100%);
+    }
+    
+    .insight-card {
+        background: white;
+        border-radius: 15px;
+        padding: 1.2rem;
+        margin-bottom: 1rem;
+        border: 1px solid rgba(0,0,0,0.05);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.02);
+    }
+    
+    .insight-card i {
+        color: #667eea;
+    }
+    
+    .table-modern {
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    }
+    
+    .table-modern thead {
+        background: var(--primary-gradient);
+        color: white;
+    }
+    
+    .table-modern th {
+        font-weight: 500;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 1px;
+        padding: 1rem !important;
+        border: none;
+    }
+    
+    .table-modern td {
+        padding: 1rem !important;
+        vertical-align: middle;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    
+    .badge-profit {
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-weight: 500;
+    }
+    
+    .badge-excellent {
+        background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+        color: #1e7e34;
+    }
+    
+    .badge-good {
+        background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        color: #0b5e7e;
+    }
+    
+    .badge-warning {
+        background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        color: #b45b0f;
+    }
+    
+    .badge-danger {
+        background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+        color: #b02a37;
+    }
+    
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 1.5rem;
+        position: relative;
+        padding-left: 1rem;
+    }
+    
+    .section-title::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 4px;
+        background: var(--primary-gradient);
+        border-radius: 2px;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: #6c757d;
+    }
+    
+    .empty-state i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        opacity: 0.3;
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+    
+    .pulse-animation {
+        animation: pulse 2s infinite;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-header">
+    <div class="container text-center">
+        <h1 class="display-4 fw-bold mb-3">Business Health Dashboard</h1>
+        <p class="lead mb-0 opacity-90">Real-time intelligence for smarter decisions</p>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <!-- Overall Health Score -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-6">
+            <div class="health-score-card text-center">
+                <div class="health-label">OVERALL BUSINESS HEALTH</div>
+                <div class="health-score">{{ "%.1f"|format(health_scores.overall_health) }}</div>
+                <div class="mt-3">
+                    <span class="status-badge status-{{ health_scores.health_status|lower }}">
+                        <i class="fas fa-circle me-2" style="font-size: 0.5rem; vertical-align: middle;"></i>
+                        {{ health_scores.health_status }}
+                    </span>
+                </div>
+                <div class="mt-3 text-muted">
+                    <i class="fas fa-calendar-alt me-2"></i>Current Period
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Health Categories -->
+    <div class="section-title">Performance Metrics</div>
+    <div class="row g-4 mb-5">
+        <div class="col-md-6 col-lg-3">
+            <div class="metric-card">
+                <div class="metric-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="d-flex justify-content-between align-items-end">
+                    <div>
+                        <div class="metric-value">{{ "%.0f"|format(health_scores.financial_health) }}</div>
+                        <div class="metric-label">Financial Health</div>
+                    </div>
+                    <div class="progress-circle" style="background: conic-gradient(#667eea 0% {{ health_scores.financial_health }}%, #e9ecef {{ health_scores.financial_health }}% 100%);">
+                        <span style="color: #2c3e50;">{{ "%.0f"|format(health_scores.financial_health) }}%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 col-lg-3">
+            <div class="metric-card">
+                <div class="metric-icon" style="background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);">
+                    <i class="fas fa-cogs"></i>
+                </div>
+                <div class="d-flex justify-content-between align-items-end">
+                    <div>
+                        <div class="metric-value">{{ "%.0f"|format(health_scores.operational_health) }}</div>
+                        <div class="metric-label">Operational Health</div>
+                    </div>
+                    <div class="progress-circle" style="background: conic-gradient(#84fab0 0% {{ health_scores.operational_health }}%, #e9ecef {{ health_scores.operational_health }}% 100%);">
+                        <span style="color: #2c3e50;">{{ "%.0f"|format(health_scores.operational_health) }}%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 col-lg-3">
+            <div class="metric-card">
+                <div class="metric-icon" style="background: linear-gradient(135deg, #fad0c4 0%, #ffd1ff 100%);">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="d-flex justify-content-between align-items-end">
+                    <div>
+                        <div class="metric-value">{{ "%.0f"|format(health_scores.client_health) }}</div>
+                        <div class="metric-label">Client Health</div>
+                    </div>
+                    <div class="progress-circle" style="background: conic-gradient(#fad0c4 0% {{ health_scores.client_health }}%, #e9ecef {{ health_scores.client_health }}% 100%);">
+                        <span style="color: #2c3e50;">{{ "%.0f"|format(health_scores.client_health) }}%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 col-lg-3">
+            <div class="metric-card">
+                <div class="metric-icon" style="background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);">
+                    <i class="fas fa-tasks"></i>
+                </div>
+                <div class="d-flex justify-content-between align-items-end">
+                    <div>
+                        <div class="metric-value">{{ "%.0f"|format(health_scores.project_health) }}</div>
+                        <div class="metric-label">Project Health</div>
+                    </div>
+                    <div class="progress-circle" style="background: conic-gradient(#fbc2eb 0% {{ health_scores.project_health }}%, #e9ecef {{ health_scores.project_health }}% 100%);">
+                        <span style="color: #2c3e50;">{{ "%.0f"|format(health_scores.project_health) }}%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row g-4">
+        <!-- Risks Section -->
+        <div class="col-lg-6">
+            <div class="section-title">
+                <i class="fas fa-exclamation-triangle me-2" style="color: #dc3545;"></i>
+                Detected Risks
+            </div>
+            {% if risks %}
+                {% for risk in risks %}
+                    <div class="risk-card risk-{{ risk.severity }}">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="mb-0 fw-bold">{{ risk.title }}</h5>
+                            <span class="badge bg-{% if risk.severity == 'high' %}danger{% elif risk.severity == 'medium' %}warning{% else %}success{% endif %} rounded-pill">
+                                {{ risk.severity|upper }}
+                            </span>
+                        </div>
+                        <p class="mb-2 text-muted">{{ risk.description }}</p>
+                        <div class="mt-2 p-2 bg-light rounded">
+                            <i class="fas fa-lightbulb text-warning me-2"></i>
+                            <small>{{ risk.recommendation }}</small>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-check-circle text-success"></i>
+                    <h5>No Risks Detected</h5>
+                    <p>Your business is running smoothly</p>
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- Insights Section -->
+        <div class="col-lg-6">
+            <div class="section-title">
+                <i class="fas fa-lightbulb me-2" style="color: #ffc107;"></i>
+                Key Insights
+            </div>
+            
+            {% if insights %}
+                <!-- Summary Insights -->
+                {% for insight in insights.summary %}
+                    <div class="insight-card">
+                        <div class="d-flex">
+                            <div class="me-3">
+                                <i class="fas fa-info-circle fa-2x" style="color: #667eea;"></i>
+                            </div>
+                            <div>
+                                <p class="mb-0">{{ insight.message }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                
+                <!-- Opportunities -->
+                {% if insights.opportunities %}
+                    <h6 class="mt-4 mb-3 fw-bold">
+                        <i class="fas fa-arrow-up text-success me-2"></i>
+                        Opportunities for Growth
+                    </h6>
+                    {% for insight in insights.opportunities %}
+                        <div class="insight-card">
+                            <div class="d-flex">
+                                <div class="me-3">
+                                    <i class="fas fa-chart-line fa-2x" style="color: #28a745;"></i>
+                                </div>
+                                <div>
+                                    <p class="mb-2">{{ insight.message }}</p>
+                                    {% if insight.recommendation %}
+                                        <small class="text-success">
+                                            <i class="fas fa-arrow-right me-1"></i>
+                                            {{ insight.recommendation }}
+                                        </small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                
+                <!-- Recommendations -->
+                {% if insights.recommendations %}
+                    <h6 class="mt-4 mb-3 fw-bold">
+                        <i class="fas fa-tasks text-primary me-2"></i>
+                        Recommended Actions
+                    </h6>
+                    {% for insight in insights.recommendations %}
+                        <div class="insight-card">
+                            <div class="d-flex">
+                                <div class="me-3">
+                                    <i class="fas fa-clipboard-check fa-2x" style="color: #667eea;"></i>
+                                </div>
+                                <div>
+                                    <p class="mb-2">{{ insight.message }}</p>
+                                    {% if insight.recommendation %}
+                                        <small class="text-primary">
+                                            <i class="fas fa-arrow-right me-1"></i>
+                                            {{ insight.recommendation }}
+                                        </small>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-lightbulb"></i>
+                    <h5>No Insights Available</h5>
+                    <p>Upload more data to generate insights</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Recent Data -->
+    {% if recent_data %}
+    <div class="mt-5">
+        <div class="section-title">
+            <i class="fas fa-history me-2" style="color: #6c757d;"></i>
+            Recent Performance
+        </div>
+        
+        <div class="table-responsive">
+            <table class="table table-modern">
+                <thead>
+                    <tr>
+                        <th>Period</th>
+                        <th>Revenue</th>
+                        <th>Expenses</th>
+                        <th>Profit</th>
+                        <th>Margin</th>
+                        <th>Projects</th>
+                        <th>Late Payments</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in recent_data %}
+                        <tr>
+                            <td>
+                                <strong>{{ record.date.strftime('%b %d') if record.date else 'Current' }}</strong>
+                            </td>
+                            <td>${{ "{:,.0f}".format(record.revenue) }}</td>
+                            <td>${{ "{:,.0f}".format(record.expenses) }}</td>
+                            <td class="fw-bold">${{ "{:,.0f}".format(record.profit) }}</td>
+                            <td>
+                                <span class="badge-profit 
+                                    {% if record.profit_margin > 0.15 %}badge-excellent
+                                    {% elif record.profit_margin > 0.10 %}badge-good
+                                    {% elif record.profit_margin > 0.05 %}badge-warning
+                                    {% else %}badge-danger{% endif %}">
+                                    {{ "%.1f"|format(record.profit_margin * 100) }}%
+                                </span>
+                            </td>
+                            <td>{{ record.projects_completed }}</td>
+                            <td>
+                                {% if record.late_payments > 5 %}
+                                    <span class="text-danger fw-bold">{{ record.late_payments }}</span>
+                                {% else %}
+                                    {{ record.late_payments }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                <i class="fas fa-circle 
+                                    {% if record.profit_margin > 0.15 %}text-success
+                                    {% elif record.profit_margin > 0.10 %}text-info
+                                    {% elif record.profit_margin > 0.05 %}text-warning
+                                    {% else %}text-danger{% endif %}
+                                    me-2" style="font-size: 0.5rem;"></i>
+                                {% if record.profit_margin > 0.15 %}Strong
+                                {% elif record.profit_margin > 0.10 %}Stable
+                                {% elif record.profit_margin > 0.05 %}Watch
+                                {% else %}Alert{% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Quick Actions -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card bg-light border-0">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h5 class="mb-2">Want to analyze different data?</h5>
+                            <p class="text-muted mb-md-0">Upload your own CSV file for custom analysis</p>
+                        </div>
+                        <div class="col-md-4 text-md-end">
+                            <a href="/upload" class="btn btn-primary px-4">
+                                <i class="fas fa-upload me-2"></i>Upload New Data
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Auto-refresh data every 5 minutes (optional)
+    setTimeout(function() {
+        if (confirm('Would you like to refresh the dashboard with latest data?')) {
+            location.reload();
+        }
+    }, 300000);
+    
+    // Add smooth hover effects
+    document.querySelectorAll('.metric-card, .risk-card, .insight-card').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+        });
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
+</script>
+{% endblock %}

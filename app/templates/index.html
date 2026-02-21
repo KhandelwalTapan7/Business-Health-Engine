@@ -1,0 +1,627 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Business Health Intelligence{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary: #667eea;
+        --secondary: #764ba2;
+        --accent: #ff6b6b;
+        --dark: #2c3e50;
+        --light: #f8f9fa;
+        --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --gradient-accent: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+        --gradient-success: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+        --shadow-sm: 0 5px 20px rgba(0,0,0,0.05);
+        --shadow-md: 0 10px 30px rgba(0,0,0,0.1);
+        --shadow-lg: 0 20px 40px rgba(102, 126, 234, 0.2);
+    }
+
+    .hero-section {
+        background: var(--gradient-primary);
+        padding: 5rem 0;
+        color: white;
+        border-radius: 0 0 50px 50px;
+        box-shadow: var(--shadow-lg);
+        margin-bottom: 4rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 50%);
+        animation: rotate 30s linear infinite;
+    }
+
+    @keyframes rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: 800;
+        line-height: 1.2;
+        margin-bottom: 1.5rem;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        animation: fadeInUp 1s ease;
+    }
+
+    .hero-subtitle {
+        font-size: 1.3rem;
+        opacity: 0.95;
+        margin-bottom: 2rem;
+        animation: fadeInUp 1s ease 0.2s both;
+    }
+
+    .hero-btn {
+        background: white;
+        color: var(--primary);
+        padding: 1rem 2.5rem;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        border: none;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        transition: all 0.3s;
+        animation: fadeInUp 1s ease 0.4s both;
+    }
+
+    .hero-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        color: var(--primary);
+    }
+
+    .hero-btn i {
+        transition: transform 0.3s;
+    }
+
+    .hero-btn:hover i {
+        transform: translateX(5px);
+    }
+
+    .floating-stats {
+        position: absolute;
+        right: 5%;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255,255,255,0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 2rem;
+        border: 1px solid rgba(255,255,255,0.2);
+        animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(-50%); }
+        50% { transform: translateY(-60%); }
+    }
+
+    .stat-item {
+        text-align: center;
+        margin: 1.5rem 0;
+    }
+
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: white;
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+        opacity: 0.9;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .section-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 1rem;
+        position: relative;
+        display: inline-block;
+    }
+
+    .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 50px;
+        height: 3px;
+        background: var(--gradient-primary);
+        border-radius: 2px;
+    }
+
+    .feature-card {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        height: 100%;
+        box-shadow: var(--shadow-sm);
+        transition: all 0.3s;
+        border: 1px solid rgba(0,0,0,0.02);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--gradient-primary);
+        transform: scaleX(0);
+        transition: transform 0.3s;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .feature-card:hover::before {
+        transform: scaleX(1);
+    }
+
+    .feature-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        font-size: 2.5rem;
+        color: white;
+    }
+
+    .feature-icon.analysis {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .feature-icon.risk {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+    }
+
+    .feature-icon.insight {
+        background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+    }
+
+    .feature-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: var(--dark);
+        margin-bottom: 1rem;
+    }
+
+    .step-card {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        height: 100%;
+        box-shadow: var(--shadow-sm);
+        transition: all 0.3s;
+        position: relative;
+        text-align: center;
+    }
+
+    .step-number {
+        width: 50px;
+        height: 50px;
+        background: var(--gradient-primary);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0 auto 1.5rem;
+        box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .step-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .cta-section {
+        background: var(--gradient-primary);
+        border-radius: 30px;
+        padding: 4rem;
+        margin: 4rem 0;
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .cta-section::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 50%);
+        animation: rotate 20s linear infinite;
+    }
+
+    .cta-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .cta-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .cta-btn {
+        background: white;
+        color: var(--primary);
+        padding: 1rem 2.5rem;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin: 0 0.5rem;
+        border: none;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        transition: all 0.3s;
+    }
+
+    .cta-btn-outline {
+        background: transparent;
+        color: white;
+        border: 2px solid white;
+        padding: 1rem 2.5rem;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin: 0 0.5rem;
+        transition: all 0.3s;
+    }
+
+    .cta-btn:hover, .cta-btn-outline:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    }
+
+    .cta-btn-outline:hover {
+        background: white;
+        color: var(--primary);
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+        margin: 3rem 0;
+    }
+
+    .stat-card {
+        text-align: center;
+        padding: 1.5rem;
+    }
+
+    .stat-card h3 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 0.5rem;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-on-scroll {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.6s;
+    }
+
+    .animate-on-scroll.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    @media (max-width: 768px) {
+        .hero-title {
+            font-size: 2.5rem;
+        }
+        
+        .floating-stats {
+            display: none;
+        }
+        
+        .cta-section {
+            padding: 2rem;
+        }
+        
+        .cta-btn, .cta-btn-outline {
+            display: block;
+            margin: 1rem 0;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero-section">
+    <div class="container hero-content">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <h1 class="hero-title">
+                    Business Health Intelligence Engine
+                </h1>
+                <p class="hero-subtitle">
+                    Transform your business data into actionable insights with AI-powered analytics
+                </p>
+                <a href="{{ url_for('main.dashboard') }}" class="hero-btn">
+                    <i class="fas fa-chart-line me-2"></i>Explore Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Floating Stats -->
+    <div class="floating-stats d-none d-lg-block">
+        <div class="stat-item">
+            <div class="stat-value">95%</div>
+            <div class="stat-label">Accuracy</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">24/7</div>
+            <div class="stat-label">Monitoring</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">Real-time</div>
+            <div class="stat-label">Insights</div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Stats Counter -->
+    <div class="stats-grid">
+        <div class="stat-card animate-on-scroll">
+            <h3>10K+</h3>
+            <p class="text-muted">Businesses Analyzed</p>
+        </div>
+        <div class="stat-card animate-on-scroll">
+            <h3>50+</h3>
+            <p class="text-muted">Health Metrics</p>
+        </div>
+        <div class="stat-card animate-on-scroll">
+            <h3>99%</h3>
+            <p class="text-muted">Client Satisfaction</p>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="text-center mb-5 animate-on-scroll">
+        <h2 class="section-title">Intelligent Business Health Monitoring</h2>
+        <p class="lead text-muted">Comprehensive analytics for smarter decision making</p>
+    </div>
+    
+    <div class="row g-4 mb-5">
+        <div class="col-md-4 animate-on-scroll">
+            <div class="feature-card">
+                <div class="feature-icon analysis">
+                    <i class="fas fa-chart-pie"></i>
+                </div>
+                <h5 class="feature-title">Multi-dimensional Analysis</h5>
+                <p class="text-muted">Analyze financial, operational, client, and project health in one unified dashboard.</p>
+                <div class="mt-3">
+                    <span class="badge bg-light text-dark me-2">Financial</span>
+                    <span class="badge bg-light text-dark me-2">Operational</span>
+                    <span class="badge bg-light text-dark">Client</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 animate-on-scroll">
+            <div class="feature-card">
+                <div class="feature-icon risk">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <h5 class="feature-title">Risk Detection</h5>
+                <p class="text-muted">Identify potential risks before they become critical issues with predictive analytics.</p>
+                <div class="mt-3">
+                    <span class="badge bg-danger me-2">Critical</span>
+                    <span class="badge bg-warning me-2">Warning</span>
+                    <span class="badge bg-info">Monitor</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4 animate-on-scroll">
+            <div class="feature-card">
+                <div class="feature-icon insight">
+                    <i class="fas fa-lightbulb"></i>
+                </div>
+                <h5 class="feature-title">Actionable Insights</h5>
+                <p class="text-muted">Get plain-language recommendations to improve business performance and efficiency.</p>
+                <div class="mt-3">
+                    <i class="fas fa-check-circle text-success me-1"></i>
+                    <small class="text-muted">Data-driven decisions</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- How It Works -->
+    <div class="text-center mb-5 animate-on-scroll">
+        <h2 class="section-title">How It Works</h2>
+        <p class="lead text-muted">Four simple steps to business intelligence</p>
+    </div>
+    
+    <div class="row g-4 mb-5">
+        <div class="col-md-3 animate-on-scroll">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h5>Upload Data</h5>
+                <p class="text-muted mb-0">Upload your business data in CSV format</p>
+                <i class="fas fa-cloud-upload-alt fa-3x mt-3" style="color: #e9ecef;"></i>
+            </div>
+        </div>
+        
+        <div class="col-md-3 animate-on-scroll">
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h5>AI Analysis</h5>
+                <p class="text-muted mb-0">Our engine analyzes patterns and risks</p>
+                <i class="fas fa-brain fa-3x mt-3" style="color: #e9ecef;"></i>
+            </div>
+        </div>
+        
+        <div class="col-md-3 animate-on-scroll">
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h5>Health Score</h5>
+                <p class="text-muted mb-0">Get comprehensive health metrics</p>
+                <i class="fas fa-chart-bar fa-3x mt-3" style="color: #e9ecef;"></i>
+            </div>
+        </div>
+        
+        <div class="col-md-3 animate-on-scroll">
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <h5>Take Action</h5>
+                <p class="text-muted mb-0">Receive actionable recommendations</p>
+                <i class="fas fa-rocket fa-3x mt-3" style="color: #e9ecef;"></i>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Testimonial/Quote -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card bg-light border-0 p-4 animate-on-scroll">
+                <div class="row align-items-center">
+                    <div class="col-md-2 text-center">
+                        <i class="fas fa-quote-right fa-4x" style="color: var(--primary); opacity: 0.3;"></i>
+                    </div>
+                    <div class="col-md-8">
+                        <p class="lead mb-0 fst-italic">
+                            "This platform transformed how we understand our business. The insights are incredibly accurate and actionable."
+                        </p>
+                        <p class="mt-3 mb-0 fw-bold">— SME Business Owner</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Call to Action -->
+    <div class="cta-section animate-on-scroll">
+        <div class="cta-content text-center">
+            <h2 class="cta-title">Ready to transform your business?</h2>
+            <p class="lead mb-4">Join thousands of SMEs using AI-powered insights</p>
+            <div>
+                <a href="{{ url_for('main.dashboard') }}" class="cta-btn">
+                    <i class="fas fa-chart-line me-2"></i>View Demo Dashboard
+                </a>
+                <a href="{{ url_for('main.upload_data') }}" class="cta-btn-outline">
+                    <i class="fas fa-upload me-2"></i>Upload Your Data
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Intersection Observer for scroll animations
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, {
+        threshold: 0.1
+    });
+
+    // Observe all elements with animate-on-scroll class
+    document.querySelectorAll('.animate-on-scroll').forEach(el => {
+        observer.observe(el);
+    });
+
+    // Counter animation for stats
+    function animateValue(obj, start, end, duration) {
+        let startTimestamp = null;
+        const step = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            obj.innerHTML = Math.floor(progress * (end - start) + start) + (obj.innerHTML.includes('K') ? 'K+' : obj.innerHTML.includes('%') ? '%' : '');
+            if (progress < 1) {
+                window.requestAnimationFrame(step);
+            }
+        };
+        window.requestAnimationFrame(step);
+    }
+
+    // Trigger counter animation when stats come into view
+    const statObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const statValues = entry.target.querySelectorAll('h3');
+                statValues.forEach(stat => {
+                    const value = stat.innerText;
+                    if (value.includes('K')) {
+                        animateValue(stat, 0, parseInt(value), 2000);
+                    } else if (value.includes('%')) {
+                        animateValue(stat, 0, parseInt(value), 2000);
+                    }
+                });
+            }
+        });
+    });
+
+    document.querySelector('.stats-grid')?.forEach(el => {
+        statObserver.observe(el);
+    });
+
+    // Parallax effect for hero section
+    window.addEventListener('scroll', () => {
+        const scrolled = window.pageYOffset;
+        const hero = document.querySelector('.hero-section');
+        if (hero) {
+            hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+        }
+    });
+</script>
+{% endblock %}
