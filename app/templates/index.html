@@ -77,12 +77,17 @@
         box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         transition: all 0.3s;
         animation: fadeInUp 1s ease 0.4s both;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
     }
 
     .hero-btn:hover {
         transform: translateY(-3px);
         box-shadow: 0 15px 30px rgba(0,0,0,0.15);
         color: var(--primary);
+        background: white;
     }
 
     .hero-btn i {
@@ -288,6 +293,10 @@
         border: none;
         box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
     }
 
     .cta-btn-outline {
@@ -300,6 +309,10 @@
         font-size: 1.1rem;
         margin: 0 0.5rem;
         transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
     }
 
     .cta-btn:hover, .cta-btn-outline:hover {
@@ -322,6 +335,9 @@
     .stat-card {
         text-align: center;
         padding: 1.5rem;
+        background: white;
+        border-radius: 15px;
+        box-shadow: var(--shadow-sm);
     }
 
     .stat-card h3 {
@@ -353,6 +369,14 @@
         transform: translateY(0);
     }
 
+    .testimonial-card {
+        background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+        border: none;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: var(--shadow-sm);
+    }
+
     @media (max-width: 768px) {
         .hero-title {
             font-size: 2.5rem;
@@ -369,6 +393,11 @@
         .cta-btn, .cta-btn-outline {
             display: block;
             margin: 1rem 0;
+        }
+        
+        .stats-grid {
+            grid-template-columns: 1fr;
+            gap: 1rem;
         }
     }
 </style>
@@ -526,7 +555,7 @@
     <!-- Testimonial/Quote -->
     <div class="row mb-5">
         <div class="col-12">
-            <div class="card bg-light border-0 p-4 animate-on-scroll">
+            <div class="testimonial-card animate-on-scroll">
                 <div class="row align-items-center">
                     <div class="col-md-2 text-center">
                         <i class="fas fa-quote-right fa-4x" style="color: var(--primary); opacity: 0.3;"></i>
@@ -557,8 +586,6 @@
             </div>
         </div>
     </div>
-    
-    
 </div>
 {% endblock %}
 
@@ -586,7 +613,8 @@
         const step = (timestamp) => {
             if (!startTimestamp) startTimestamp = timestamp;
             const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-            obj.innerHTML = Math.floor(progress * (end - start) + start) + (obj.innerHTML.includes('K') ? 'K+' : obj.innerHTML.includes('%') ? '%' : '');
+            obj.innerHTML = Math.floor(progress * (end - start) + start) + 
+                (obj.innerHTML.includes('K') ? 'K+' : obj.innerHTML.includes('%') ? '%' : '');
             if (progress < 1) {
                 window.requestAnimationFrame(step);
             }
@@ -611,8 +639,9 @@
         });
     });
 
-    document.querySelector('.stats-grid')?.forEach(el => {
-        statObserver.observe(el);
+    // Fix for the statObserver
+    document.querySelectorAll('.stats-grid').forEach(grid => {
+        statObserver.observe(grid);
     });
 
     // Parallax effect for hero section
@@ -620,8 +649,22 @@
         const scrolled = window.pageYOffset;
         const hero = document.querySelector('.hero-section');
         if (hero) {
-            hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+            hero.style.transform = `translateY(${scrolled * 0.3}px)`;
         }
+    });
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
     });
 </script>
 {% endblock %}

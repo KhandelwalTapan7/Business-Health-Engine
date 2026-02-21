@@ -84,6 +84,7 @@
         box-shadow: 0 10px 30px rgba(0,0,0,0.05);
         transition: all 0.3s;
         border: 1px solid rgba(0,0,0,0.02);
+        height: 100%;
     }
     
     .metric-card:hover {
@@ -110,6 +111,7 @@
         font-weight: 700;
         color: #2c3e50;
         margin-bottom: 0;
+        line-height: 1.2;
     }
     
     .metric-label {
@@ -120,15 +122,17 @@
     }
     
     .progress-circle {
-        width: 80px;
-        height: 80px;
+        width: 70px;
+        height: 70px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         font-weight: 700;
-        font-size: 1.5rem;
-        color: white;
+        font-size: 1.2rem;
+        background: #f8f9fa;
+        color: #2c3e50;
+        box-shadow: inset 0 0 0 5px #e9ecef;
     }
     
     .risk-card {
@@ -143,6 +147,7 @@
     
     .risk-card:hover {
         transform: translateX(5px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
     }
     
     .risk-high {
@@ -167,6 +172,12 @@
         margin-bottom: 1rem;
         border: 1px solid rgba(0,0,0,0.05);
         box-shadow: 0 5px 15px rgba(0,0,0,0.02);
+        transition: all 0.2s;
+    }
+    
+    .insight-card:hover {
+        box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+        border-color: #667eea;
     }
     
     .insight-card i {
@@ -197,12 +208,15 @@
         padding: 1rem !important;
         vertical-align: middle;
         border-bottom: 1px solid rgba(0,0,0,0.05);
+        background-color: white;
     }
     
     .badge-profit {
-        padding: 0.5rem 1rem;
+        padding: 0.4rem 0.8rem;
         border-radius: 50px;
         font-weight: 500;
+        font-size: 0.85rem;
+        display: inline-block;
     }
     
     .badge-excellent {
@@ -249,12 +263,26 @@
         text-align: center;
         padding: 3rem;
         color: #6c757d;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
     }
     
     .empty-state i {
         font-size: 3rem;
         margin-bottom: 1rem;
         opacity: 0.3;
+    }
+    
+    .quick-action-card {
+        background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+        border: 1px dashed #667eea;
+        transition: all 0.3s;
+    }
+    
+    .quick-action-card:hover {
+        background: white;
+        border-style: solid;
     }
     
     @keyframes pulse {
@@ -305,13 +333,13 @@
                 <div class="metric-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
                     <i class="fas fa-chart-line"></i>
                 </div>
-                <div class="d-flex justify-content-between align-items-end">
+                <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <div class="metric-value">{{ "%.0f"|format(health_scores.financial_health) }}</div>
                         <div class="metric-label">Financial Health</div>
                     </div>
-                    <div class="progress-circle" style="background: conic-gradient(#667eea 0% {{ health_scores.financial_health }}%, #e9ecef {{ health_scores.financial_health }}% 100%);">
-                        <span style="color: #2c3e50;">{{ "%.0f"|format(health_scores.financial_health) }}%</span>
+                    <div class="progress-circle" style="background: conic-gradient(#667eea 0deg {{ health_scores.financial_health * 3.6 }}deg, #e9ecef {{ health_scores.financial_health * 3.6 }}deg 360deg);">
+                        <span>{{ "%.0f"|format(health_scores.financial_health) }}%</span>
                     </div>
                 </div>
             </div>
@@ -322,13 +350,13 @@
                 <div class="metric-icon" style="background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);">
                     <i class="fas fa-cogs"></i>
                 </div>
-                <div class="d-flex justify-content-between align-items-end">
+                <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <div class="metric-value">{{ "%.0f"|format(health_scores.operational_health) }}</div>
                         <div class="metric-label">Operational Health</div>
                     </div>
-                    <div class="progress-circle" style="background: conic-gradient(#84fab0 0% {{ health_scores.operational_health }}%, #e9ecef {{ health_scores.operational_health }}% 100%);">
-                        <span style="color: #2c3e50;">{{ "%.0f"|format(health_scores.operational_health) }}%</span>
+                    <div class="progress-circle" style="background: conic-gradient(#84fab0 0deg {{ health_scores.operational_health * 3.6 }}deg, #e9ecef {{ health_scores.operational_health * 3.6 }}deg 360deg);">
+                        <span>{{ "%.0f"|format(health_scores.operational_health) }}%</span>
                     </div>
                 </div>
             </div>
@@ -339,13 +367,13 @@
                 <div class="metric-icon" style="background: linear-gradient(135deg, #fad0c4 0%, #ffd1ff 100%);">
                     <i class="fas fa-users"></i>
                 </div>
-                <div class="d-flex justify-content-between align-items-end">
+                <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <div class="metric-value">{{ "%.0f"|format(health_scores.client_health) }}</div>
                         <div class="metric-label">Client Health</div>
                     </div>
-                    <div class="progress-circle" style="background: conic-gradient(#fad0c4 0% {{ health_scores.client_health }}%, #e9ecef {{ health_scores.client_health }}% 100%);">
-                        <span style="color: #2c3e50;">{{ "%.0f"|format(health_scores.client_health) }}%</span>
+                    <div class="progress-circle" style="background: conic-gradient(#fad0c4 0deg {{ health_scores.client_health * 3.6 }}deg, #e9ecef {{ health_scores.client_health * 3.6 }}deg 360deg);">
+                        <span>{{ "%.0f"|format(health_scores.client_health) }}%</span>
                     </div>
                 </div>
             </div>
@@ -356,13 +384,13 @@
                 <div class="metric-icon" style="background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);">
                     <i class="fas fa-tasks"></i>
                 </div>
-                <div class="d-flex justify-content-between align-items-end">
+                <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <div class="metric-value">{{ "%.0f"|format(health_scores.project_health) }}</div>
                         <div class="metric-label">Project Health</div>
                     </div>
-                    <div class="progress-circle" style="background: conic-gradient(#fbc2eb 0% {{ health_scores.project_health }}%, #e9ecef {{ health_scores.project_health }}% 100%);">
-                        <span style="color: #2c3e50;">{{ "%.0f"|format(health_scores.project_health) }}%</span>
+                    <div class="progress-circle" style="background: conic-gradient(#fbc2eb 0deg {{ health_scores.project_health * 3.6 }}deg, #e9ecef {{ health_scores.project_health * 3.6 }}deg 360deg);">
+                        <span>{{ "%.0f"|format(health_scores.project_health) }}%</span>
                     </div>
                 </div>
             </div>
@@ -386,10 +414,12 @@
                             </span>
                         </div>
                         <p class="mb-2 text-muted">{{ risk.description }}</p>
+                        {% if risk.recommendation %}
                         <div class="mt-2 p-2 bg-light rounded">
                             <i class="fas fa-lightbulb text-warning me-2"></i>
                             <small>{{ risk.recommendation }}</small>
                         </div>
+                        {% endif %}
                     </div>
                 {% endfor %}
             {% else %}
@@ -410,18 +440,20 @@
             
             {% if insights %}
                 <!-- Summary Insights -->
-                {% for insight in insights.summary %}
-                    <div class="insight-card">
-                        <div class="d-flex">
-                            <div class="me-3">
-                                <i class="fas fa-info-circle fa-2x" style="color: #667eea;"></i>
-                            </div>
-                            <div>
-                                <p class="mb-0">{{ insight.message }}</p>
+                {% if insights.summary %}
+                    {% for insight in insights.summary %}
+                        <div class="insight-card">
+                            <div class="d-flex">
+                                <div class="me-3">
+                                    <i class="fas fa-info-circle fa-2x" style="color: #667eea;"></i>
+                                </div>
+                                <div>
+                                    <p class="mb-0">{{ insight.message }}</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                {% endfor %}
+                    {% endfor %}
+                {% endif %}
                 
                 <!-- Opportunities -->
                 {% if insights.opportunities %}
@@ -496,53 +528,48 @@
             <table class="table table-modern">
                 <thead>
                     <tr>
-                        <th>Period</th>
+                        <th>Date</th>
                         <th>Revenue</th>
                         <th>Expenses</th>
                         <th>Profit</th>
                         <th>Margin</th>
                         <th>Projects</th>
                         <th>Late Payments</th>
-                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for record in recent_data %}
                         <tr>
                             <td>
-                                <strong>{{ record.date.strftime('%b %d') if record.date else 'Current' }}</strong>
-                            </td>
-                            <td>${{ "{:,.0f}".format(record.revenue) }}</td>
-                            <td>${{ "{:,.0f}".format(record.expenses) }}</td>
-                            <td class="fw-bold">${{ "{:,.0f}".format(record.profit) }}</td>
-                            <td>
-                                <span class="badge-profit 
-                                    {% if record.profit_margin > 0.15 %}badge-excellent
-                                    {% elif record.profit_margin > 0.10 %}badge-good
-                                    {% elif record.profit_margin > 0.05 %}badge-warning
-                                    {% else %}badge-danger{% endif %}">
-                                    {{ "%.1f"|format(record.profit_margin * 100) }}%
-                                </span>
-                            </td>
-                            <td>{{ record.projects_completed }}</td>
-                            <td>
-                                {% if record.late_payments > 5 %}
-                                    <span class="text-danger fw-bold">{{ record.late_payments }}</span>
+                                {% if record.date %}
+                                    {{ record.date }}
                                 {% else %}
-                                    {{ record.late_payments }}
+                                    Current
                                 {% endif %}
                             </td>
+                            <td>${{ "{:,.0f}".format(record.revenue|float) }}</td>
+                            <td>${{ "{:,.0f}".format(record.expenses|float) }}</td>
+                            <td class="fw-bold">${{ "{:,.0f}".format(record.profit|float) }}</td>
                             <td>
-                                <i class="fas fa-circle 
-                                    {% if record.profit_margin > 0.15 %}text-success
-                                    {% elif record.profit_margin > 0.10 %}text-info
-                                    {% elif record.profit_margin > 0.05 %}text-warning
-                                    {% else %}text-danger{% endif %}
-                                    me-2" style="font-size: 0.5rem;"></i>
-                                {% if record.profit_margin > 0.15 %}Strong
-                                {% elif record.profit_margin > 0.10 %}Stable
-                                {% elif record.profit_margin > 0.05 %}Watch
-                                {% else %}Alert{% endif %}
+                                {% if record.profit_margin %}
+                                <span class="badge-profit 
+                                    {% if record.profit_margin|float > 0.15 %}badge-excellent
+                                    {% elif record.profit_margin|float > 0.10 %}badge-good
+                                    {% elif record.profit_margin|float > 0.05 %}badge-warning
+                                    {% else %}badge-danger{% endif %}">
+                                    {{ "%.1f"|format(record.profit_margin|float * 100) }}%
+                                </span>
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </td>
+                            <td>{{ record.projects_completed|default('0') }}</td>
+                            <td>
+                                {% if record.late_payments|default(0) > 5 %}
+                                    <span class="text-danger fw-bold">{{ record.late_payments }}</span>
+                                {% else %}
+                                    {{ record.late_payments|default('0') }}
+                                {% endif %}
                             </td>
                         </tr>
                     {% endfor %}
@@ -555,15 +582,15 @@
     <!-- Quick Actions -->
     <div class="row mt-5">
         <div class="col-12">
-            <div class="card bg-light border-0">
+            <div class="card quick-action-card border-0">
                 <div class="card-body p-4">
                     <div class="row align-items-center">
                         <div class="col-md-8">
                             <h5 class="mb-2">Want to analyze different data?</h5>
-                            <p class="text-muted mb-md-0">Upload your own CSV file for custom analysis</p>
+                            <p class="text-muted mb-md-0">Upload your own CSV file for custom analysis and get personalized insights</p>
                         </div>
                         <div class="col-md-4 text-md-end">
-                            <a href="/upload" class="btn btn-primary px-4">
+                            <a href="{{ url_for('main.upload_data') }}" class="btn btn-primary px-4">
                                 <i class="fas fa-upload me-2"></i>Upload New Data
                             </a>
                         </div>
@@ -585,12 +612,30 @@
     }, 300000);
     
     // Add smooth hover effects
-    document.querySelectorAll('.metric-card, .risk-card, .insight-card').forEach(card => {
+    document.querySelectorAll('.metric-card, .risk-card, .insight-card, .health-score-card').forEach(card => {
         card.addEventListener('mouseenter', function() {
             this.style.transform = 'translateY(-5px)';
         });
         card.addEventListener('mouseleave', function() {
             this.style.transform = 'translateY(0)';
+        });
+    });
+    
+    // Add tooltips for better UX
+    document.querySelectorAll('[data-toggle="tooltip"]').forEach(element => {
+        element.addEventListener('mouseenter', function(e) {
+            const tooltip = document.createElement('div');
+            tooltip.className = 'tooltip-custom';
+            tooltip.textContent = this.getAttribute('title');
+            document.body.appendChild(tooltip);
+            
+            const rect = this.getBoundingClientRect();
+            tooltip.style.top = rect.top - tooltip.offsetHeight - 10 + 'px';
+            tooltip.style.left = rect.left + (rect.width/2) - (tooltip.offsetWidth/2) + 'px';
+            
+            this.addEventListener('mouseleave', function() {
+                tooltip.remove();
+            });
         });
     });
 </script>
